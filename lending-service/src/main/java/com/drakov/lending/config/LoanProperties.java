@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @ConfigurationProperties("lending.loan")
 @Component
+//todo apply jsr380
 public class LoanProperties {
 
     private int termInMonths;

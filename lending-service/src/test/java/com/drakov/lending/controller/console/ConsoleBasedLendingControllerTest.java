@@ -10,19 +10,18 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 public class ConsoleBasedLendingControllerTest {
 
+    private ConsoleBasedLendingController controller;
+
     @Mock
     private ResponseFormatter formatter;
     @Mock
     private ControllerRequestProcessor requestProcessor;
-
-    private ConsoleBasedLendingController controller;
 
     @Before
     public void setUp() {
@@ -66,7 +65,6 @@ public class ConsoleBasedLendingControllerTest {
         controller.run(args);
 
         verify(requestProcessor, times(1)).uploadFileAndCalculateLoan(args);
-        verify(response, times(1)).toString(formatter);
         verify(formatter, times(1)).format(response);
     }
 }

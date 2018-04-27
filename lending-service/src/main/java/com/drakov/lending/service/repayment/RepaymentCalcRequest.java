@@ -8,6 +8,15 @@ public class RepaymentCalcRequest {
     private double rate;
     private int termInMonths;
 
+    public RepaymentCalcRequest() {
+    }
+
+    public RepaymentCalcRequest(double loanAmount, double rate, int termInMonths) {
+        this.loanAmount = loanAmount;
+        this.rate = rate;
+        this.termInMonths = termInMonths;
+    }
+
     public double getLoanAmount() {
         return loanAmount;
     }
@@ -39,28 +48,13 @@ public class RepaymentCalcRequest {
         return new RepaymentCalcRequest();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RepaymentCalcRequest that = (RepaymentCalcRequest) o;
-
-        if (Double.compare(that.loanAmount, loanAmount) != 0) return false;
-        if (Double.compare(that.rate, rate) != 0) return false;
-        return termInMonths == that.termInMonths;
-
-    }
 
     @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(loanAmount);
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(rate);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + termInMonths;
-        return result;
+    public String toString() {
+        return "RepaymentCalcRequest{" +
+                "loanAmount=" + loanAmount +
+                ", rate=" + rate +
+                ", termInMonths=" + termInMonths +
+                '}';
     }
 }

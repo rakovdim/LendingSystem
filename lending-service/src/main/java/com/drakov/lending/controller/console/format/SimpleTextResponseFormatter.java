@@ -35,7 +35,7 @@ public class SimpleTextResponseFormatter implements ResponseFormatter {
         return String.format("%.0f", loanAmount);
     }
 
-    private String formatRate(float rate) {
+    private String formatRate(double rate) {
         return formatDecimal(rate, props.getRateDecimalPlaces());
     }
 

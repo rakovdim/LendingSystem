@@ -16,7 +16,7 @@ public class ArgsValidator {
 
     private static void validateArgsCount(String... args) throws UserException {
         if (args.length != 2)
-            throw new UserException(INCORRECT_ARGUMENTS_COUNT_EM);
+            throw new UserException(ARGS_INCORRECT_ARGUMENTS_COUNT_EM);
     }
 
     private static void validateLoanAmountArg(LoanProperties props, String loanAmountArg) throws UserException {
@@ -26,19 +26,19 @@ public class ArgsValidator {
             validateLoanAmount(props, loanAmount);
 
         } catch (NumberFormatException e) {
-            throw new UserException(LOAN_AMOUNT_INCORRECT_FORMAT_ERROR_MESSAGE, e);
+            throw new UserException(ARGS_LOAN_AMOUNT_IS_NOT_NUMERIC_EM, e);
         }
     }
 
     private static void validateLoanAmount(LoanProperties props, double loanAmount) throws UserException {
         if (loanAmount <= 0)
-            throw new UserException(LOAN_AMOUNT_NOT_POSITIVE_EM, loanAmount);
+            throw new UserException(ARGS_LOAN_AMOUNT_NOT_POSITIVE_EM, loanAmount);
 
         if (loanAmount < props.getMinValue()
                 || loanAmount > props.getMaxValue()
                 || loanAmount % props.getLoanAmountMultiple() != 0)
 
-            throw new UserException(LOAN_AMOUNT_INCORRECT_VALUE_EM, props.getMinValue(),
+            throw new UserException(ARGS_LOAN_AMOUNT_INCORRECT_VALUE_EM, props.getMinValue(),
                     props.getMaxValue(), props.getLoanAmountMultiple());
 
     }

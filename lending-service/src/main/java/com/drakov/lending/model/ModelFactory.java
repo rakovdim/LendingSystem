@@ -13,7 +13,7 @@ public class ModelFactory {
         this.idGenerator = idGenerator;
     }
 
-    public Lender createLender(String name, float rate, double available) {
+    public Lender createLender(String name, double rate, double available) {
         return new Lender(idGenerator.generateId(), name, rate, available);
     }
 }

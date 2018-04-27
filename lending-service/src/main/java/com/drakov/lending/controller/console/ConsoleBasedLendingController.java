@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import static com.drakov.lending.constants.LendingConstants.*;
+import java.util.Arrays;
+
+import static com.drakov.lending.constants.LendingConstants.INTERNAL_EXCEPTION_OCCURRED_EM;
+import static com.drakov.lending.constants.LendingConstants.REQUEST_ID_MDC_PARAM;
 
 @Component
 public class ConsoleBasedLendingController implements CommandLineRunner {
@@ -32,9 +35,15 @@ public class ConsoleBasedLendingController implements CommandLineRunner {
 
             MDC.put(REQUEST_ID_MDC_PARAM, generateRequestId());
 
+            logger.info("New request processing starts. Args: " + Arrays.toString(args));
+
             LendingResponse lendingResponse = requestProcessor.uploadFileAndCalculateLoan(args);
 
-            showResult(lendingResponse);
+            String formattedResponse = responseFormatter.format(lendingResponse);
+
+            System.out.println(formattedResponse);
+
+            logger.info("Request processing successfully ends. Response: \n" + formattedResponse);
 
         } catch (UserException e) {
             handleUserException(e);
@@ -47,16 +56,12 @@ public class ConsoleBasedLendingController implements CommandLineRunner {
     }
 
 
-    private void showResult(LendingResponse lendingResponse) {
-        System.out.println(lendingResponse.toString(responseFormatter));
-    }
-
     protected void handleUserException(UserException e) {
         handleException(e, e.getMessage(), e.getMessage());
     }
 
     protected void handleInternalException(Exception e) {
-        handleException(e, e.getMessage(), INTERNAL_EXCEPTION_OCCURRED_ERROR_MESSAGE);
+        handleException(e, e.getMessage(), INTERNAL_EXCEPTION_OCCURRED_EM);
     }
 
     private static void handleException(Exception e, String logMessage, String userMessage) {

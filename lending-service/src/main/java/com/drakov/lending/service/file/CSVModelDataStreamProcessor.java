@@ -7,7 +7,6 @@ import com.drakov.lending.exceptions.UserException;
 import com.drakov.lending.model.Lender;
 import com.drakov.lending.model.ModelFactory;
 import com.drakov.lending.utils.validation.FileValidator;
-import com.opencsv.CSVReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +43,6 @@ public class CSVModelDataStreamProcessor implements ModelDataStreamProcessor {
 
         String[] headers = csvClient.readRow();
 
-        FileValidator.validateFileNotEmpty(headers);
         FileValidator.validateHeaders(headers);
 
         List<Lender> lenders = new ArrayList<>();
@@ -62,7 +60,7 @@ public class CSVModelDataStreamProcessor implements ModelDataStreamProcessor {
     }
 
     private Lender createLender(String name, String rate, String available) {
-        return modelFactory.createLender(name, Float.parseFloat(rate), Double.parseDouble(available));
+        return modelFactory.createLender(name, Double.parseDouble(rate), Double.parseDouble(available));
     }
 
 }

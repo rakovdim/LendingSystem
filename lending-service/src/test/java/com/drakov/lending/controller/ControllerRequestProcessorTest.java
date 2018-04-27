@@ -1,18 +1,22 @@
 package com.drakov.lending.controller;
 
 import com.drakov.lending.config.LoanProperties;
-import com.drakov.lending.controller.ControllerRequestProcessor;
 import com.drakov.lending.dto.LendingResponse;
 import com.drakov.lending.exceptions.UserException;
 import com.drakov.lending.service.LendingService;
 import com.drakov.lending.service.ModelService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
+import java.text.MessageFormat;
+
+import static com.drakov.lending.constants.LendingConstants.*;
+import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -21,7 +25,6 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(SpringRunner.class)
 public class ControllerRequestProcessorTest {
-
 
     @Mock
     private LoanProperties loanProperties;
@@ -33,6 +36,9 @@ public class ControllerRequestProcessorTest {
     private ControllerRequestProcessor requestProcessor;
     private ControllerRequestProcessor spyRequestProcessor;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void setUp() throws Exception {
         requestProcessor = new ControllerRequestProcessor(modelService, lendingService, loanProperties);
@@ -41,71 +47,12 @@ public class ControllerRequestProcessorTest {
         doNothing().when(spyRequestProcessor).processMarketFile(any());
     }
 
-    @Test(expected = UserException.class)
+    @Test
     public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenArgsAreNull() throws UserException {
+
+        expectUserException(ARGS_INCORRECT_ARGUMENTS_COUNT_EM);
+
         spyRequestProcessor.uploadFileAndCalculateLoan();
-
-        fail("User Exception wasn't thrown but args are null");
-    }
-
-    @Test(expected = UserException.class)
-    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenOneArgIsPassed() throws UserException {
-
-        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv");
-
-        fail("User Exception wasn't thrown but only one args was passed");
-    }
-
-    @Test(expected = UserException.class)
-    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenThreeArgsArePassed() throws UserException {
-
-        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv", "4200", "100");
-
-        fail("User Exception wasn't thrown but three args were passed");
-    }
-
-    @Test(expected = UserException.class)
-    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenLoanAmountIsNotNumeric() throws UserException {
-
-        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv", "test");
-
-        fail("User Exception wasn't thrown but loan amount is not a numeric");
-    }
-
-    @Test(expected = UserException.class)
-    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenLoanAmountIsLessThanMinimum() throws UserException {
-
-        when(loanProperties.getMinValue()).thenReturn(1000d);
-        when(loanProperties.getMaxValue()).thenReturn(15000d);
-        when(loanProperties.getLoanAmountMultiple()).thenReturn(100);
-
-        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv", "500");
-
-        fail("User Exception wasn't thrown but loan amount is less than minimum");
-    }
-
-    @Test(expected = UserException.class)
-    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenLoanAmountIsMoreThanMaximum() throws UserException {
-
-        when(loanProperties.getMinValue()).thenReturn(1000d);
-        when(loanProperties.getMaxValue()).thenReturn(15000d);
-        when(loanProperties.getLoanAmountMultiple()).thenReturn(100);
-
-        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv", "30000");
-
-        fail("User Exception wasn't thrown but loan amount is more than maximum");
-    }
-
-    @Test(expected = UserException.class)
-    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenLoanAmountIsNotMultipleOf() throws UserException {
-
-        when(loanProperties.getMinValue()).thenReturn(1000d);
-        when(loanProperties.getMaxValue()).thenReturn(15000d);
-        when(loanProperties.getLoanAmountMultiple()).thenReturn(100);
-
-        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv", "4004");
-
-        fail("User Exception wasn't thrown but loan amount is not a multiple of 100");
     }
 
     @Test
@@ -126,5 +73,70 @@ public class ControllerRequestProcessorTest {
         verify(lendingService, times(1)).calculateLoan(loanAmount);
         verify(spyRequestProcessor, times(1)).processMarketFile(marketFileName);
         assertSame("Actual and expected responses aren't equal", response, actualResponse);
+    }
+
+    @Test
+    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenOneArgIsPassed() throws UserException {
+
+        expectUserException(ARGS_INCORRECT_ARGUMENTS_COUNT_EM);
+
+        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv");
+    }
+
+    @Test
+    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenThreeArgsArePassed() throws UserException {
+
+        expectUserException(ARGS_INCORRECT_ARGUMENTS_COUNT_EM);
+
+        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv", "4200", "100");
+    }
+
+    @Test
+    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenLoanAmountIsNotNumeric() throws UserException {
+
+        expectUserException(ARGS_LOAN_AMOUNT_IS_NOT_NUMERIC_EM);
+
+        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv", "test");
+    }
+
+    @Test
+    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenLoanAmountIsLessThanMinimum() throws UserException {
+
+        expectUserException(MessageFormat.format(ARGS_LOAN_AMOUNT_INCORRECT_VALUE_EM, 1000, 15000, 100));
+
+        when(loanProperties.getMinValue()).thenReturn(1000d);
+        when(loanProperties.getMaxValue()).thenReturn(15000d);
+        when(loanProperties.getLoanAmountMultiple()).thenReturn(100);
+
+        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv", "900");
+    }
+
+    @Test
+    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenLoanAmountIsMoreThanMaximum() throws UserException {
+
+        expectUserException(MessageFormat.format(ARGS_LOAN_AMOUNT_INCORRECT_VALUE_EM, 1000, 15000, 100));
+
+        when(loanProperties.getMinValue()).thenReturn(1000d);
+        when(loanProperties.getMaxValue()).thenReturn(15000d);
+        when(loanProperties.getLoanAmountMultiple()).thenReturn(100);
+
+        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv", "15100");
+    }
+
+    @Test
+    public void testUploadFileAndCalculateLoan_shouldThrowUserException_whenLoanAmountIsNotMultipleOf100() throws UserException {
+
+        expectUserException(MessageFormat.format(ARGS_LOAN_AMOUNT_INCORRECT_VALUE_EM, 1000, 15000, 100));
+
+        when(loanProperties.getMinValue()).thenReturn(1000d);
+        when(loanProperties.getMaxValue()).thenReturn(15000d);
+        when(loanProperties.getLoanAmountMultiple()).thenReturn(100);
+
+        spyRequestProcessor.uploadFileAndCalculateLoan("market_file.csv", "4004");
+    }
+
+    private void expectUserException(String message) {
+        thrown.expect(UserException.class);
+        thrown.expectMessage(message);
     }
 }

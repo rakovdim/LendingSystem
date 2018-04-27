@@ -17,8 +17,8 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
-import static com.drakov.lending.constants.LendingConstants.LOAN_AMOUNT_NOT_POSITIVE_EM;
-import static org.junit.Assert.*;
+import static com.drakov.lending.constants.LendingConstants.ARGS_LOAN_AMOUNT_NOT_POSITIVE_EM;
+import static com.drakov.lending.constants.LendingConstants.NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -57,42 +57,49 @@ public class LendingServiceTest {
         verify(borrowerLoanProcessor, times(1)).calculateQuote(lender, loanAmount);
     }
 
-    @Test(expected = UserException.class)
+    @Test
     public void testCalculateLoan_shouldThrowException_ifNoLenderInRepoExist() throws UserException {
+        thrown.expect(UserException.class);
+        thrown.expectMessage(NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM);
 
         Double loanAmount = 10d;
         when(lenderRepository.findAll()).thenReturn(Collections.emptyList());
+        when(lenderFinder.findAppropriateLender(anyList(), anyDouble())).thenReturn(mock(Lender.class));
 
         lendingService.calculateLoan(loanAmount);
-
-        fail("User Exception is not thrown and no lender was found in repository");
     }
 
-    @Test(expected = UserException.class)
+    @Test
     public void testCalculateLoan_shouldThrowException_ifNoAppropriateLenderFoundByFinder() throws UserException {
+
+        expectUserException(NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM);
 
         Double loanAmount = 10d;
         when(lenderRepository.findAll()).thenReturn(Collections.singletonList(mock(Lender.class)));
         when(lenderFinder.findAppropriateLender(anyList(), anyDouble())).thenReturn(null);
 
         lendingService.calculateLoan(loanAmount);
-
-        fail("User Exception is not thrown and no appropriate lender was found");
     }
 
     @Test
     public void testCalculateLoan_shouldThrowUserException_ifLoanAmountIsNegative() throws UserException {
-        thrown.expect(UserException.class);
-        thrown.expectMessage(MessageFormat.format(LOAN_AMOUNT_NOT_POSITIVE_EM, -10));
 
-        lendingService.calculateLoan(-10);
+        expectUserException(MessageFormat.format(ARGS_LOAN_AMOUNT_NOT_POSITIVE_EM, -1));
+
+        lendingService.calculateLoan(-1);
     }
 
     @Test
     public void testCalculateLoan_shouldThrowUserException_ifLoanAmountIsZero() throws UserException {
-        thrown.expect(UserException.class);
-        thrown.expectMessage(MessageFormat.format(LOAN_AMOUNT_NOT_POSITIVE_EM, 0));
+
+        expectUserException(MessageFormat.format(ARGS_LOAN_AMOUNT_NOT_POSITIVE_EM, 0));
 
         lendingService.calculateLoan(0);
+    }
+
+    private void expectUserException(String message) {
+        thrown.expect(UserException.class);
+        thrown.expectMessage(message);
+
     }
 }

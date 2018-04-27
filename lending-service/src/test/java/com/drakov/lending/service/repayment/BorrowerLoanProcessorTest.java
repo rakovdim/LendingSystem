@@ -38,18 +38,22 @@ public class BorrowerLoanProcessorTest {
     public void testCalculateQuote_shouldReturnCorrectCalculationData_ifAllParametersValid() {
 
         double amount = 100;
-        float rate = 0.11f;
-        double calcMonthly = 100;
-        double calcTotal = 3800;
+        double rate = 0.11f;
+        double expectedCalcMonthly = 100;
+        double expectedCalcTotal = 3800;
 
-        Lender lender = TestUtils.mockLender(rate);
-        RepaymentCalcRequest expectedRequest = commonRepaymentRequest(amount, rate);
+        Lender lender = TestUtils.mockLenderRate(rate);
+        RepaymentCalcRequest expectedRequest = new RepaymentCalcRequest(amount, rate, TERM_IN_MONTHS);
 
         when(loanProperties.getTermInMonths()).thenReturn(TERM_IN_MONTHS);
         when(repaymentCalcProvider.get(lender)).thenReturn(repaymentCalculator);
-        when(repaymentCalculator.calculate(expectedRequest)).thenReturn(new Repayment(calcMonthly, calcTotal));
+        when(repaymentCalculator.calculate(expectedRequest)).thenReturn(new Repayment(expectedCalcMonthly, expectedCalcTotal));
 
-        LendingResponse actualResponse = borrowerLoanProcessor.calculateQuote(lender, amount);
+        BorrowerLoanProcessor spyBorrowerLoanProcessor = spy(borrowerLoanProcessor);
+        when(spyBorrowerLoanProcessor.createCalcRequest(amount, rate, TERM_IN_MONTHS)).thenReturn(expectedRequest);
+
+        LendingResponse actualResponse = spyBorrowerLoanProcessor.calculateQuote(lender, amount);
+
 
         verify(loanProperties, times(1)).getTermInMonths();
         verify(repaymentCalcProvider, times(1)).get(lender);
@@ -57,8 +61,8 @@ public class BorrowerLoanProcessorTest {
 
         assertEquals("Loan amount is not correct", amount, actualResponse.getRequestedAmount(), 0);
         assertEquals("Rate is not correct", rate, actualResponse.getRate(), 0);
-        assertEquals("Monthly Repayment is not correct", calcMonthly, actualResponse.getMonthlyRepayment(), 0);
-        assertEquals("Total Repayment is not correct", calcTotal, actualResponse.getTotalRepayment(), 0);
+        assertEquals("Monthly Repayment is not correct", expectedCalcMonthly, actualResponse.getMonthlyRepayment(), 0);
+        assertEquals("Total Repayment is not correct", expectedCalcTotal, actualResponse.getTotalRepayment(), 0);
     }
 
     @Test(expected = InternalProcessingException.class)
@@ -75,10 +79,4 @@ public class BorrowerLoanProcessorTest {
 
     }
 
-    private static RepaymentCalcRequest commonRepaymentRequest(double loanAmount, float rate) {
-        return RepaymentCalcRequest.newOne()
-                .setLoanAmount(loanAmount)
-                .setRate(rate)
-                .setTermInMonths(TERM_IN_MONTHS);
-    }
 }

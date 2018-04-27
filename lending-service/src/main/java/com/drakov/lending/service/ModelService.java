@@ -19,7 +19,6 @@ import static com.drakov.lending.constants.LendingConstants.NO_LENDERS_FOUND_DUR
  * Created by dima on 27.04.18.
  */
 @Component
-//todo
 public class ModelService {
 
     private static final Logger log = LoggerFactory.getLogger(ModelService.class);

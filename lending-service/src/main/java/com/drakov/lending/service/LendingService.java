@@ -10,10 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
-import static com.drakov.lending.constants.LendingConstants.LOAN_AMOUNT_NOT_POSITIVE_EM;
+import static com.drakov.lending.constants.LendingConstants.ARGS_LOAN_AMOUNT_NOT_POSITIVE_EM;
 import static com.drakov.lending.constants.LendingConstants.NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM;
 
 /**
@@ -23,7 +24,6 @@ import static com.drakov.lending.constants.LendingConstants.NO_LENDER_WAS_FOUND_
 public class LendingService {
 
     private static final Logger log = LoggerFactory.getLogger(LendingService.class);
-
 
     private LenderRepository lenderRepository;
     private LenderFinder lenderFinder;
@@ -44,29 +44,25 @@ public class LendingService {
 
         List<Lender> allLenders = lenderRepository.findAll();
 
-        if (allLenders == null)
+        if (CollectionUtils.isEmpty(allLenders))
             throw new UserException(NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM);
 
-        LendingResponse response = findLenderAndCalculateQuote(allLenders, loanAmount);
+        Lender appropriateLender = lenderFinder.findAppropriateLender(allLenders, loanAmount);
+
+        if (appropriateLender == null) {
+            throw new UserException(NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM);
+        }
+
+        LendingResponse response = borrowerLoanProcessor.calculateQuote(appropriateLender, loanAmount);
 
         log.debug("Loan calculation ends. Response: " + response);
 
         return response;
     }
 
-    protected LendingResponse findLenderAndCalculateQuote(List<Lender> lenders, double loanAmount) throws UserException {
-
-        Lender appropriateLender = lenderFinder.findAppropriateLender(lenders, loanAmount);
-
-        if (appropriateLender == null) {
-            throw new UserException(NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM);
-        }
-
-        return borrowerLoanProcessor.calculateQuote(appropriateLender, loanAmount);
-    }
 
     private static void checkAmount(double amount) throws UserException {
         if (amount <= 0)
-            throw new UserException(LOAN_AMOUNT_NOT_POSITIVE_EM, amount);
+            throw new UserException(ARGS_LOAN_AMOUNT_NOT_POSITIVE_EM, amount);
     }
 }

@@ -4,3 +4,4 @@
 4) Check constants
 5) Exception Handling
 6) Infinity rate and available
+7) Integration tests

@@ -4,10 +4,10 @@ public class Lender {
 
     private final Long id;
     private String name;
-    private float rate;
+    private double rate;
     private double available;
 
-    Lender(Long id, String name, float rate, double available) {
+    Lender(Long id, String name, double rate, double available) {
         this.id = id;
         this.name = name;
         this.rate = rate;
@@ -26,11 +26,11 @@ public class Lender {
         this.name = name;
     }
 
-    public float getRate() {
+    public double getRate() {
         return rate;
     }
 
-    public void setRate(float rate) {
+    public void setRate(double rate) {
         this.rate = rate;
     }
 
