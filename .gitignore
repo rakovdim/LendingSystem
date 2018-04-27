@@ -1,3 +1,4 @@
+.git/
 .idea/
-target/
+lending-service/target/
 *.iml

@@ -1,0 +1,6 @@
+1) add logs
+2) add java docs
+[done] 3) round nor format
+4) Check constants
+5) Exception Handling
+6) Infinity rate and available
