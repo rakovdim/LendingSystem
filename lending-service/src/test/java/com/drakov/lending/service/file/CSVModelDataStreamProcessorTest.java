@@ -247,7 +247,8 @@ public class CSVModelDataStreamProcessorTest {
         String[] firstRow = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         String[] secondRow = {"Bob", "12.2", "-1000"};
 
-        testIncorrectFileDataException(format(FILE_NEGATIVE_AVAILABLE_EM, "Bob"), new String[][]{firstRow, secondRow});
+        testIncorrectFileDataException(format(FILE_NEGATIVE_AVAILABLE_EM, "-1000", Arrays.toString(secondRow)),
+                new String[][]{firstRow, secondRow});
     }
 
     @Test
@@ -256,7 +257,8 @@ public class CSVModelDataStreamProcessorTest {
         String[] firstRow = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         String[] secondRow = {"Bob", "-12.2", "1000"};
 
-        testIncorrectFileDataException(format(FILE_NEGATIVE_RATE_EM, "Bob"), new String[][]{firstRow, secondRow});
+        testIncorrectFileDataException(format(FILE_NEGATIVE_RATE_EM, "-12.2", Arrays.toString(secondRow)),
+                new String[][]{firstRow, secondRow});
     }
 
 

@@ -4,7 +4,6 @@ import com.drakov.lending.exceptions.UserException;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
-import java.util.function.Function;
 
 import static com.drakov.lending.constants.LendingConstants.*;
 
@@ -35,14 +34,8 @@ public class FileValidator {
         if (StringUtils.isEmpty(lenderRow[0]) || StringUtils.isEmpty(lenderRow[1]) || StringUtils.isEmpty(lenderRow[2]))
             throw new UserException(FILE_INCORRECT_LENDER_VALUES_EM, Arrays.toString(lenderRow));
 
-        double rate = extractDoubleValue(lenderRow, lenderRow[1]);
-        double available = extractDoubleValue(lenderRow, lenderRow[2]);
-
-        if (rate < 0)
-            throw new UserException(FILE_NEGATIVE_RATE_EM, lenderRow[0], Arrays.toString(lenderRow));
-
-        if (available < 0)
-            throw new UserException(FILE_NEGATIVE_AVAILABLE_EM, lenderRow[0], Arrays.toString(lenderRow));
+        validateRate(lenderRow);
+        validateAvailable(lenderRow);
     }
 
     private static void validateRowNotEmpty(String[] row) throws UserException {
@@ -51,7 +44,21 @@ public class FileValidator {
             throw new UserException(FILE_EMPTY_ROWS_ARE_NOT_SUPPORTED_EM);
     }
 
-    private static double extractDoubleValue(String[] row, String value) throws UserException {
+    private static void validateRate(String[] row) throws UserException {
+        double rate = validatePositiveDoubleValue(row, row[1]);
+
+        if (rate < 0)
+            throw new UserException(FILE_NEGATIVE_RATE_EM, row[1], Arrays.toString(row));
+    }
+
+    private static void validateAvailable(String[] row) throws UserException {
+        Double available = validatePositiveDoubleValue(row, row[2]);
+
+        if (available < 0)
+            throw new UserException(FILE_NEGATIVE_AVAILABLE_EM, row[2], Arrays.toString(row));
+    }
+
+    private static double validatePositiveDoubleValue(String[] row, String value) throws UserException {
         try {
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {

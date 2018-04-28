@@ -150,7 +150,8 @@ public class LendingServiceIntegrationTest {
         assertNull(response);
 
         assertTrue(responseEntity.getException() instanceof UserException);
-        assertEquals(MessageFormat.format(FILE_NEGATIVE_RATE_EM, "Mary"), responseEntity.getException().getMessage());
+        assertEquals(MessageFormat.format(FILE_NEGATIVE_RATE_EM, "-0.104", Arrays.toString(new String[]{"Mary","-0.104","3000"})),
+                responseEntity.getException().getMessage());
     }
 
     private double maxDelta(int decimalPlaces) {
