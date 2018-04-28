@@ -16,13 +16,13 @@ public class FileValidator {
         validateRowNotEmpty(headerColumns);
 
         if (headerColumns.length != 3)
-            throw new UserException(FILE_INCORRECT_HEADERS_COUNT_EM);
+            throw new UserException(FILE_INCORRECT_HEADERS_COUNT_EM, Arrays.toString(headerColumns));
 
         if (!FILE_LENDER_HEADER_NAME.equalsIgnoreCase(headerColumns[0]) ||
                 !FILE_RATE_HEADER_NAME.equalsIgnoreCase(headerColumns[1]) ||
                 !FILE_AVAILABLE_HEADER_NAME.equalsIgnoreCase(headerColumns[2]))
 
-            throw new UserException(FILE_INCORRECT_HEADER_NAME_EM);
+            throw new UserException(FILE_INCORRECT_HEADER_NAME_EM, Arrays.toString(headerColumns));
     }
 
     public static void validateValues(String[] lenderRow) throws UserException {
@@ -30,7 +30,7 @@ public class FileValidator {
         validateRowNotEmpty(lenderRow);
 
         if (lenderRow.length != 3)
-            throw new UserException(FILE_INCORRECT_LENDER_VALUES_COUNT_EM);
+            throw new UserException(FILE_INCORRECT_LENDER_VALUES_COUNT_EM, Arrays.toString(lenderRow));
 
         if (StringUtils.isEmpty(lenderRow[0]) || StringUtils.isEmpty(lenderRow[1]) || StringUtils.isEmpty(lenderRow[2]))
             throw new UserException(FILE_INCORRECT_LENDER_VALUES_EM, Arrays.toString(lenderRow));

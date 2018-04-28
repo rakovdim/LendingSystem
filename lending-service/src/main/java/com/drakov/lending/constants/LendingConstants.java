@@ -14,14 +14,14 @@ public interface LendingConstants {
 
     //File processing error messages
     String FILE_BASE_PROCESSING_EM = "Error during processing csv file: ";
-    String FILE_NOT_FOUND_EM = FILE_BASE_PROCESSING_EM + "csv file not found. Please put it in LendingSystem directory or specify absolute path";
+    String FILE_NOT_FOUND_EM = FILE_BASE_PROCESSING_EM + "csv file not found. Please put it in LendingSystem directory and run app from there. Or specify absolute file path";
 
-    String FILE_INCORRECT_HEADERS_COUNT_EM = FILE_BASE_PROCESSING_EM + "incorrect header columns count. There should be three: Lender, Rate and Available (commas forbidden)";
-    String FILE_INCORRECT_HEADER_NAME_EM = FILE_BASE_PROCESSING_EM + "incorrect header name. Next strictly ordered headers are expected: Lender,Rate,Available";
+    String FILE_INCORRECT_HEADERS_COUNT_EM = FILE_BASE_PROCESSING_EM + "incorrect header columns count. There should be three: Lender, Rate and Available (commas forbidden). Incorrect row: {0}";
+    String FILE_INCORRECT_HEADER_NAME_EM = FILE_BASE_PROCESSING_EM + "incorrect header name. Next strictly ordered headers are expected: Lender,Rate,Available. Incorrect row: {0}";
 
     String FILE_EMPTY_ROWS_ARE_NOT_SUPPORTED_EM = FILE_BASE_PROCESSING_EM + " empty rows are not supported";
-    String FILE_INCORRECT_LENDER_VALUES_COUNT_EM = FILE_BASE_PROCESSING_EM + "incorrect lender values count. There should be 3 in a row: Lender value, rate value and available value. Commas forbidden";
-    String FILE_INCORRECT_LENDER_VALUES_EM = FILE_BASE_PROCESSING_EM + "one of lender values is empty in a row: {0}. Lender, Rate and Available should be specified. Nulls are forbidden ";
+    String FILE_INCORRECT_LENDER_VALUES_COUNT_EM = FILE_BASE_PROCESSING_EM + "incorrect lender values count. There should be 3 in a row: Lender value, rate value and available value. Commas forbidden. Incorrect row: {0}";
+    String FILE_INCORRECT_LENDER_VALUES_EM = FILE_BASE_PROCESSING_EM + "one of lender values is empty in a row. Lender, Rate and Available should be specified. Nulls are forbidden. Incorrect row: {0}";
 
     String FILE_NEGATIVE_RATE_EM = FILE_BASE_PROCESSING_EM + "rate value of lender {0} can't be negative";
     String FILE_NEGATIVE_AVAILABLE_EM = FILE_BASE_PROCESSING_EM + "available value of lender {0} can't be negative";

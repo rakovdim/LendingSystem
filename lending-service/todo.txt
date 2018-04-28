@@ -5,3 +5,4 @@
 [done] 5) Exception Handling
 [done] 6) Infinity rate and available
 [done] 7) Integration tests
+8) Aspects
