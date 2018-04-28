@@ -132,7 +132,8 @@ public class LendingServiceIntegrationTest {
         assertNull(response);
 
         assertTrue(responseEntity.getException() instanceof UserException);
-        assertEquals(FILE_INCORRECT_HEADER_NAME_EM, responseEntity.getException().getMessage());
+        assertEquals(MessageFormat.format(FILE_INCORRECT_HEADER_NAME_EM, Arrays.toString(new String[]{"Something", "Rate", "Available"})),
+                responseEntity.getException().getMessage());
     }
 
     @Test
