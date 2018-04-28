@@ -4,7 +4,7 @@ import com.drakov.lending.TestUtils;
 import com.drakov.lending.config.LoanProperties;
 import com.drakov.lending.dto.LendingResponse;
 import com.drakov.lending.exceptions.InternalProcessingException;
-import com.drakov.lending.model.Lender;
+import com.drakov.lending.model.Offer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,21 +42,21 @@ public class BorrowerLoanProcessorTest {
         double expectedCalcMonthly = 100;
         double expectedCalcTotal = 3800;
 
-        Lender lender = TestUtils.mockLenderRate(rate);
+        Offer offer = TestUtils.mockOfferRate(rate);
         RepaymentCalcRequest expectedRequest = new RepaymentCalcRequest(amount, rate, TERM_IN_MONTHS);
 
         when(loanProperties.getTermInMonths()).thenReturn(TERM_IN_MONTHS);
-        when(repaymentCalcProvider.get(lender)).thenReturn(repaymentCalculator);
+        when(repaymentCalcProvider.get(offer)).thenReturn(repaymentCalculator);
         when(repaymentCalculator.calculate(expectedRequest)).thenReturn(new Repayment(expectedCalcMonthly, expectedCalcTotal));
 
         BorrowerLoanProcessor spyBorrowerLoanProcessor = spy(borrowerLoanProcessor);
         when(spyBorrowerLoanProcessor.createCalcRequest(amount, rate, TERM_IN_MONTHS)).thenReturn(expectedRequest);
 
-        LendingResponse actualResponse = spyBorrowerLoanProcessor.calculateQuote(lender, amount);
+        LendingResponse actualResponse = spyBorrowerLoanProcessor.calculateQuote(offer, amount);
 
 
         verify(loanProperties, times(1)).getTermInMonths();
-        verify(repaymentCalcProvider, times(1)).get(lender);
+        verify(repaymentCalcProvider, times(1)).get(offer);
         verify(repaymentCalculator, times(1)).calculate(expectedRequest);
 
         assertEquals("Loan amount is not correct", amount, actualResponse.getRequestedAmount(), 0);
@@ -69,11 +69,11 @@ public class BorrowerLoanProcessorTest {
     public void testCalculateQuote_shouldThrowException_ifNoCalculatorFound() {
 
         double amount = 100;
-        Lender lender = mock(Lender.class);
+        Offer offer = mock(Offer.class);
 
         when(repaymentCalcProvider.get(any())).thenReturn(null);
 
-        borrowerLoanProcessor.calculateQuote(lender, amount);
+        borrowerLoanProcessor.calculateQuote(offer, amount);
 
         fail("Exception is not thrown but no calculator was found");
 

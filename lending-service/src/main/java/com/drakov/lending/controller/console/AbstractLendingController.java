@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
 
 import static com.drakov.lending.constants.LendingConstants.REQUEST_ID_MDC_PARAM;
@@ -20,13 +21,16 @@ public abstract class AbstractLendingController implements LendingController {
                                                          String... args) {
         try {
 
+            long time = System.currentTimeMillis();
+
             MDC.put(REQUEST_ID_MDC_PARAM, generateRequestId());
 
             logger.info("New request processing starts. Args: " + Arrays.toString(args));
 
             T response = processingFunction.apply(args);
 
-            logger.info("Request processing successfully ends. Response: " + response);
+            logger.info(MessageFormat.format("Request successfully processed. Time: {0}ms. Response: {1}",
+                    System.currentTimeMillis() - time, response));
 
             return ResponseEntity.ok(response);
 

@@ -2,8 +2,8 @@ package com.drakov.lending.service;
 
 import com.drakov.lending.TestUtils;
 import com.drakov.lending.exceptions.UserException;
-import com.drakov.lending.model.Lender;
-import com.drakov.lending.repository.LenderRepository;
+import com.drakov.lending.model.Offer;
+import com.drakov.lending.repository.OfferRepository;
 import com.drakov.lending.service.file.ModelDataStreamProcessor;
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,7 +17,7 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static com.drakov.lending.constants.LendingConstants.NO_LENDERS_FOUND_DURING_STREAM_PROCESSING_EM;
+import static com.drakov.lending.constants.LendingConstants.NO_OFFERS_FOUND_DURING_STREAM_PROCESSING_EM;
 import static org.mockito.Mockito.*;
 
 /**
@@ -28,7 +28,7 @@ public class ModelServiceTest {
 
     private ModelService modelService;
     @Mock
-    private LenderRepository repository;
+    private OfferRepository repository;
     @Mock
     private ModelDataStreamProcessor streamProcessor;
 
@@ -41,33 +41,33 @@ public class ModelServiceTest {
     }
 
     @Test
-    public void testUploadModelDataStream_shouldThrowException_IfNoLendersWereUploaded() throws Exception {
+    public void testUploadModelDataStream_shouldThrowException_IfNoOffersWereUploaded() throws Exception {
 
         thrown.expect(UserException.class);
-        thrown.expectMessage(NO_LENDERS_FOUND_DURING_STREAM_PROCESSING_EM);
+        thrown.expectMessage(NO_OFFERS_FOUND_DURING_STREAM_PROCESSING_EM);
 
         Reader reader = mock(Reader.class);
 
-        when(streamProcessor.uploadStreamData(reader)).thenReturn(Collections.emptyList());
+        when(streamProcessor.uploadOffers(reader)).thenReturn(Collections.emptyList());
 
-        modelService.uploadModelDataStream(reader);
+        modelService.uploadOffersStream(reader);
     }
 
     @Test
-    public void testUploadModelDataStream_shouldCallRepository_ForEachUploadedLender() throws Exception {
+    public void testUploadModelDataStream_shouldCallRepository_ForEachUploadedOffer() throws Exception {
 
         Reader reader = mock(Reader.class);
 
-        Lender lender1 = TestUtils.mockEmptyLender();
-        Lender lender2 = TestUtils.mockEmptyLender();
-        Lender lender3 = TestUtils.mockEmptyLender();
+        Offer offer1 = TestUtils.mockEmptyOffer();
+        Offer offer2 = TestUtils.mockEmptyOffer();
+        Offer offer3 = TestUtils.mockEmptyOffer();
 
-        when(streamProcessor.uploadStreamData(reader)).thenReturn(Arrays.asList(lender1, lender2, lender3));
+        when(streamProcessor.uploadOffers(reader)).thenReturn(Arrays.asList(offer1, offer2, offer3));
 
-        modelService.uploadModelDataStream(reader);
+        modelService.uploadOffersStream(reader);
 
-        verify(repository, times(1)).save(lender1);
-        verify(repository, times(1)).save(lender2);
-        verify(repository, times(1)).save(lender3);
+        verify(repository, times(1)).save(offer1);
+        verify(repository, times(1)).save(offer2);
+        verify(repository, times(1)).save(offer3);
     }
 }

@@ -33,7 +33,7 @@ public class CommonLendingController extends AbstractLendingController {
         String fileName = args[0];
         double loanAmount = Double.parseDouble(args[1]);
 
-        modelService.uploadModelDataFile(fileName);
+        modelService.uploadFileWithOffers(fileName);
 
         return lendingService.calculateLoan(loanAmount);
     }

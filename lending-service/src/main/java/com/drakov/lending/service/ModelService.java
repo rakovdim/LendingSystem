@@ -1,8 +1,8 @@
 package com.drakov.lending.service;
 
 import com.drakov.lending.exceptions.UserException;
-import com.drakov.lending.model.Lender;
-import com.drakov.lending.repository.LenderRepository;
+import com.drakov.lending.model.Offer;
+import com.drakov.lending.repository.OfferRepository;
 import com.drakov.lending.service.file.ModelDataStreamProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.io.Reader;
 import java.util.List;
 
 import static com.drakov.lending.constants.LendingConstants.FILE_NOT_FOUND_EM;
-import static com.drakov.lending.constants.LendingConstants.NO_LENDERS_FOUND_DURING_STREAM_PROCESSING_EM;
+import static com.drakov.lending.constants.LendingConstants.NO_OFFERS_FOUND_DURING_STREAM_PROCESSING_EM;
 
 /**
  * Created by dima on 27.04.18.
@@ -28,22 +28,22 @@ public class ModelService {
     private static final Logger log = LoggerFactory.getLogger(ModelService.class);
 
     private ModelDataStreamProcessor modelStreamProcessor;
-    private LenderRepository lenderRepository;
+    private OfferRepository offerRepository;
 
     @Autowired
-    public ModelService(ModelDataStreamProcessor modelStreamProcessor, LenderRepository repository) {
+    public ModelService(ModelDataStreamProcessor modelStreamProcessor, OfferRepository repository) {
         this.modelStreamProcessor = modelStreamProcessor;
-        this.lenderRepository = repository;
+        this.offerRepository = repository;
     }
 
-    public void uploadModelDataFile(String fileName) throws UserException {
+    public void uploadFileWithOffers(String fileName) throws UserException {
         log.debug("Loading file with market values: {0}", fileName);
 
         FileReader reader = null;
         try {
             reader = new FileReader(fileName);
 
-            uploadModelDataStream(reader);
+            uploadOffersStream(reader);
 
         } catch (FileNotFoundException e) {
             log.error("File was not wound: " + fileName);
@@ -59,16 +59,16 @@ public class ModelService {
         }
     }
 
-    public void uploadModelDataStream(Reader reader) throws UserException {
+    public void uploadOffersStream(Reader reader) throws UserException {
 
         log.debug("Processing model data stream starts");
 
-        List<Lender> lenderList = modelStreamProcessor.uploadStreamData(reader);
+        List<Offer> offerList = modelStreamProcessor.uploadOffers(reader);
 
-        if (CollectionUtils.isEmpty(lenderList))
-            throw new UserException(NO_LENDERS_FOUND_DURING_STREAM_PROCESSING_EM);
+        if (CollectionUtils.isEmpty(offerList))
+            throw new UserException(NO_OFFERS_FOUND_DURING_STREAM_PROCESSING_EM);
 
-        lenderList.forEach(lender -> lenderRepository.save(lender));
+        offerList.forEach(offer -> offerRepository.save(offer));
 
         log.debug("Processing model data stream ends");
     }

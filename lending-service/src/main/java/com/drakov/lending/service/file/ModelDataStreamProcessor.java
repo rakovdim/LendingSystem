@@ -1,7 +1,7 @@
 package com.drakov.lending.service.file;
 
 import com.drakov.lending.exceptions.UserException;
-import com.drakov.lending.model.Lender;
+import com.drakov.lending.model.Offer;
 
 import java.io.Reader;
 import java.util.List;
@@ -12,6 +12,6 @@ import java.util.List;
 
 public interface ModelDataStreamProcessor {
 
-    public List<Lender> uploadStreamData(Reader reader) throws UserException;
+    public List<Offer> uploadOffers(Reader reader) throws UserException;
 }
 

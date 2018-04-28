@@ -1,7 +1,7 @@
 package com.drakov.lending;
 
 
-import com.drakov.lending.model.Lender;
+import com.drakov.lending.model.Offer;
 
 import java.util.function.Consumer;
 
@@ -10,36 +10,36 @@ import static org.mockito.Mockito.when;
 
 public class TestUtils {
 
-    public static Lender mockEmptyLender() {
-        return mock(Lender.class);
+    public static Offer mockEmptyOffer() {
+        return mock(Offer.class);
     }
 
-    public static Lender mockLenderRate(double rate) {
-        return doMock(lender -> when(lender.getRate()).thenReturn(rate));
+    public static Offer mockOfferRate(double rate) {
+        return doMock(offer -> when(offer.getRate()).thenReturn(rate));
     }
 
-    public static Lender mockLenderAvailable(double available) {
-        return doMock(lender -> when(lender.getAvailable()).thenReturn(available));
+    public static Offer mockOfferAvailable(double available) {
+        return doMock(offer -> when(offer.getAvailable()).thenReturn(available));
     }
 
-    public static Lender mockLenderRateAvailable(double rate, double available) {
-        return doMock(lender -> {
-            when(lender.getAvailable()).thenReturn(available);
-            when(lender.getRate()).thenReturn(rate);
+    public static Offer mockOfferRateAvailable(double rate, double available) {
+        return doMock(offer -> {
+            when(offer.getAvailable()).thenReturn(available);
+            when(offer.getRate()).thenReturn(rate);
         });
     }
 
-    public static Lender mockLenderAll(String name, double rate, double available) {
-        return doMock(lender -> {
-            when(lender.getRate()).thenReturn(rate);
-            when(lender.getAvailable()).thenReturn(available);
-            when(lender.getName()).thenReturn(name);
+    public static Offer mockOfferAll(String name, double rate, double available) {
+        return doMock(offer -> {
+            when(offer.getRate()).thenReturn(rate);
+            when(offer.getAvailable()).thenReturn(available);
+            when(offer.getLender()).thenReturn(name);
         });
     }
 
-    private static Lender doMock(Consumer<Lender> consumer) {
-        Lender lender = mockEmptyLender();
-        consumer.accept(lender);
-        return lender;
+    private static Offer doMock(Consumer<Offer> consumer) {
+        Offer offer = mockEmptyOffer();
+        consumer.accept(offer);
+        return offer;
     }
 }

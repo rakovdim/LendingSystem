@@ -87,7 +87,7 @@ public class CommonLendingControllerTest {
         assertSame(response, responseEntity.getEntity());
 
         verify(lendingService, times(1)).calculateLoan(loanAmount);
-        verify(modelService, times(1)).uploadModelDataFile(fileName);
+        verify(modelService, times(1)).uploadFileWithOffers(fileName);
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.drakov.lending.constants;
 
 public interface LendingConstants {
 
-    String NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM = "No lender was found. Perhaps there is no lender with requested budget";
+    String NO_OFFER_WAS_FOUND_EM = "No offers were found. Please try again later";
     String INTERNAL_EXCEPTION_OCCURRED_EM = "Internal error occurred. Please contact system administrator";
 
     //Args validation error messages
@@ -20,14 +20,14 @@ public interface LendingConstants {
     String FILE_INCORRECT_HEADER_NAME_EM = FILE_BASE_PROCESSING_EM + "incorrect header name. Next strictly ordered headers are expected: Lender,Rate,Available. Incorrect row: {0}";
 
     String FILE_EMPTY_ROWS_ARE_NOT_SUPPORTED_EM = FILE_BASE_PROCESSING_EM + " empty rows are not supported";
-    String FILE_INCORRECT_LENDER_VALUES_COUNT_EM = FILE_BASE_PROCESSING_EM + "incorrect lender values count. There should be 3 in a row: Lender value, rate value and available value. Commas forbidden. Incorrect row: {0}";
-    String FILE_INCORRECT_LENDER_VALUES_EM = FILE_BASE_PROCESSING_EM + "one of lender values is empty in a row. Lender, Rate and Available should be specified. Nulls are forbidden. Incorrect row: {0}";
+    String FILE_INCORRECT_OFFER_VALUES_COUNT_EM = FILE_BASE_PROCESSING_EM + "incorrect offer values count. There should be 3 in a row: lender, rate value and available value. Commas forbidden. Incorrect row: {0}";
+    String FILE_INCORRECT_OFFER_VALUES_EM = FILE_BASE_PROCESSING_EM + "one of lender values is empty in a row. Lender, Rate and Available should be specified. Nulls are forbidden. Incorrect row: {0}";
 
     String FILE_NEGATIVE_RATE_EM = FILE_BASE_PROCESSING_EM + "rate: {0} cant be negative. Incorrect row: {1}";
     String FILE_NEGATIVE_AVAILABLE_EM = FILE_BASE_PROCESSING_EM + "available: {0} cant be negative. Incorrect Row: {1}";
     String FILE_VALUE_IS_NOT_NUMERIC_EM = FILE_BASE_PROCESSING_EM + "value {0} is not a valid numeric (note: commas in value are forbidden). Incorrect Row: {1}";
 
-    String NO_LENDERS_FOUND_DURING_STREAM_PROCESSING_EM = "No lenders were found during model data stream processing";
+    String NO_OFFERS_FOUND_DURING_STREAM_PROCESSING_EM = NO_OFFER_WAS_FOUND_EM;
 
 
     String FILE_LENDER_HEADER_NAME = "Lender";
