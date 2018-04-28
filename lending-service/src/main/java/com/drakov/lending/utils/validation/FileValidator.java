@@ -35,14 +35,14 @@ public class FileValidator {
         if (StringUtils.isEmpty(lenderRow[0]) || StringUtils.isEmpty(lenderRow[1]) || StringUtils.isEmpty(lenderRow[2]))
             throw new UserException(FILE_INCORRECT_LENDER_VALUES_EM, Arrays.toString(lenderRow));
 
-        double rate = extractValue(lenderRow[0], lenderRow[1], Double::parseDouble);
-        double available = extractValue(lenderRow[0], lenderRow[2], Double::parseDouble);
+        double rate = extractDoubleValue(lenderRow, lenderRow[1]);
+        double available = extractDoubleValue(lenderRow, lenderRow[2]);
 
         if (rate < 0)
-            throw new UserException(FILE_NEGATIVE_RATE_EM, lenderRow[0]);
+            throw new UserException(FILE_NEGATIVE_RATE_EM, lenderRow[0], Arrays.toString(lenderRow));
 
         if (available < 0)
-            throw new UserException(FILE_NEGATIVE_AVAILABLE_EM, lenderRow[0]);
+            throw new UserException(FILE_NEGATIVE_AVAILABLE_EM, lenderRow[0], Arrays.toString(lenderRow));
     }
 
     private static void validateRowNotEmpty(String[] row) throws UserException {
@@ -51,11 +51,11 @@ public class FileValidator {
             throw new UserException(FILE_EMPTY_ROWS_ARE_NOT_SUPPORTED_EM);
     }
 
-    private static <T> T extractValue(String lender, String value, Function<String, T> extractor) throws UserException {
+    private static double extractDoubleValue(String[] row, String value) throws UserException {
         try {
-            return extractor.apply(value);
+            return Double.parseDouble(value);
         } catch (NumberFormatException e) {
-            throw new UserException(FILE_VALUE_IS_NOT_NUMERIC_EM, value, lender);
+            throw new UserException(FILE_VALUE_IS_NOT_NUMERIC_EM, value, Arrays.toString(row));
         }
     }
 }

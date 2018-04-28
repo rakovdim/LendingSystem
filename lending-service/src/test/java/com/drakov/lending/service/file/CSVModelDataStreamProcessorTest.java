@@ -227,7 +227,7 @@ public class CSVModelDataStreamProcessorTest {
         String[] firstRow = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         String[] secondRow = {"Bob", "test", "1000"};
 
-        testIncorrectFileDataException(format(FILE_VALUE_IS_NOT_NUMERIC_EM, "test", "Bob"),
+        testIncorrectFileDataException(format(FILE_VALUE_IS_NOT_NUMERIC_EM, "test", Arrays.toString(secondRow)),
                 new String[][]{firstRow, secondRow});
     }
 
@@ -237,7 +237,8 @@ public class CSVModelDataStreamProcessorTest {
         String[] firstRow = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         String[] secondRow = {"Bob", "12.2", "test"};
 
-        testIncorrectFileDataException(format(FILE_VALUE_IS_NOT_NUMERIC_EM, "test", "Bob"), new String[][]{firstRow, secondRow});
+        testIncorrectFileDataException(format(FILE_VALUE_IS_NOT_NUMERIC_EM, "test", Arrays.toString(secondRow)),
+                new String[][]{firstRow, secondRow});
     }
 
     @Test

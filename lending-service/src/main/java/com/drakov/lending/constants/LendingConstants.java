@@ -23,10 +23,10 @@ public interface LendingConstants {
     String FILE_INCORRECT_LENDER_VALUES_COUNT_EM = FILE_BASE_PROCESSING_EM + "incorrect lender values count. There should be 3 in a row: Lender value, rate value and available value. Commas forbidden. Incorrect row: {0}";
     String FILE_INCORRECT_LENDER_VALUES_EM = FILE_BASE_PROCESSING_EM + "one of lender values is empty in a row. Lender, Rate and Available should be specified. Nulls are forbidden. Incorrect row: {0}";
 
-    String FILE_NEGATIVE_RATE_EM = FILE_BASE_PROCESSING_EM + "rate value of lender {0} can't be negative";
-    String FILE_NEGATIVE_AVAILABLE_EM = FILE_BASE_PROCESSING_EM + "available value of lender {0} can't be negative";
+    String FILE_NEGATIVE_RATE_EM = FILE_BASE_PROCESSING_EM + "rate: {0} can't be negative. Incorrect row: {1}";
+    String FILE_NEGATIVE_AVAILABLE_EM = FILE_BASE_PROCESSING_EM + "available: {0} can't be negative. Incorrect row: {1}";
+    String FILE_VALUE_IS_NOT_NUMERIC_EM = FILE_BASE_PROCESSING_EM + "value {0} is not a valid numeric (note: commas in value are forbidden). Incorrect Row: {1}";
 
-    String FILE_VALUE_IS_NOT_NUMERIC_EM = FILE_BASE_PROCESSING_EM + "value {0} is not a valid numeric (note: commas in value are forbidden) Lender: {1}";
     String NO_LENDERS_FOUND_DURING_STREAM_PROCESSING_EM = "No lenders were found during model data stream processing";
 
 
