@@ -1,6 +1,6 @@
 package com.drakov.lending.service.repayment;
 
-import com.drakov.lending.model.Lender;
+import com.drakov.lending.model.Offer;
 import com.drakov.lending.service.repayment.impl.InterestBasedCalculator;
 import com.drakov.lending.service.repayment.impl.ZeroRateCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class RepaymentCalcProvider {
         this.zeroRateCalculator = zeroRateCalculator;
     }
 
-    public RepaymentCalculator get(Lender lender) {
-        return lender.getRate() == 0 ? zeroRateCalculator : interestBasedCalculator;
+    public RepaymentCalculator get(Offer offer) {
+        return offer.getRate() == 0 ? zeroRateCalculator : interestBasedCalculator;
     }
 }

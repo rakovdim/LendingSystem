@@ -4,7 +4,7 @@ import com.drakov.lending.clients.csv.CsvClient;
 import com.drakov.lending.clients.csv.CsvClientFactory;
 import com.drakov.lending.exceptions.InternalProcessingException;
 import com.drakov.lending.exceptions.UserException;
-import com.drakov.lending.model.Lender;
+import com.drakov.lending.model.Offer;
 import com.drakov.lending.model.ModelFactory;
 import com.drakov.lending.utils.validation.FileValidator;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class CSVModelDataStreamProcessor implements ModelDataStreamProcessor {
     }
 
     @Override
-    public List<Lender> uploadStreamData(Reader reader) throws UserException {
+    public List<Offer> uploadOffers(Reader reader) throws UserException {
         try {
             CsvClient csvClient = csvClientFactory.create(reader);
 
@@ -43,7 +43,7 @@ public class CSVModelDataStreamProcessor implements ModelDataStreamProcessor {
         }
     }
 
-    private List<Lender> processCSVFile(CsvClient csvClient) throws IOException, UserException {
+    private List<Offer> processCSVFile(CsvClient csvClient) throws IOException, UserException {
 
         String[] headers = csvClient.readRow();
 
@@ -51,24 +51,24 @@ public class CSVModelDataStreamProcessor implements ModelDataStreamProcessor {
 
         log.trace("Header is read and validated. Starting reading values");
 
-        List<Lender> lenders = new ArrayList<>();
+        List<Offer> offers = new ArrayList<>();
 
-        String[] lenderRow;
-        while ((lenderRow = csvClient.readRow()) != null) {
+        String[] offerRow;
+        while ((offerRow = csvClient.readRow()) != null) {
 
-            FileValidator.validateValues(lenderRow);
+            FileValidator.validateValues(offerRow);
 
-            Lender lender = createLender(lenderRow[0], lenderRow[1], lenderRow[2]);
+            Offer offer = createOffer(offerRow[0], offerRow[1], offerRow[2]);
 
-            log.trace("Values is validated and Lender is created: {0}", lender);
+            log.trace("Values is validated and Offer is created: {0}", offer);
 
-            lenders.add(lender);
+            offers.add(offer);
         }
-        return lenders;
+        return offers;
     }
 
-    private Lender createLender(String name, String rate, String available) {
-        return modelFactory.createLender(name, Double.parseDouble(rate), Double.parseDouble(available));
+    private Offer createOffer(String name, String rate, String available) {
+        return modelFactory.createOffer(name, Double.parseDouble(rate), Double.parseDouble(available));
     }
 
 }

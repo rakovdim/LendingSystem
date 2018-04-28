@@ -4,7 +4,7 @@ import com.drakov.lending.TestUtils;
 import com.drakov.lending.clients.csv.CsvClient;
 import com.drakov.lending.clients.csv.CsvClientFactory;
 import com.drakov.lending.exceptions.UserException;
-import com.drakov.lending.model.Lender;
+import com.drakov.lending.model.Offer;
 import com.drakov.lending.model.ModelFactory;
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,7 +46,7 @@ public class CSVModelDataStreamProcessorTest {
     }
 
     @Test
-    public void testUploadStream_shouldReturnFourLenders_whenFourLenderValuesAreInStream() throws Exception {
+    public void testUploadStream_shouldReturnFourOffers_whenFourOffersValuesAreInStream() throws Exception {
 
         String[] row1 = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         String[] row2 = {"Bob", "12.2", "1000"};
@@ -57,43 +57,43 @@ public class CSVModelDataStreamProcessorTest {
         CsvClient client = new CsvClientStub(new String[][]{row1, row2, row3, row4, row5});
         when(csvClientFactory.create(reader)).thenReturn(client);
 
-        streamProcessor.uploadStreamData(reader);
+        streamProcessor.uploadOffers(reader);
 
         verify(csvClientFactory, times(1)).create(reader);
 
-        verify(modelFactory, times(1)).createLender("Bob", 12.2, 1000);
-        verify(modelFactory, times(1)).createLender("Alex", 0f, 3333);
-        verify(modelFactory, times(1)).createLender("John", 11.22, 0);
-        verify(modelFactory, times(1)).createLender("James", 12.2, 10000);
+        verify(modelFactory, times(1)).createOffer("Bob", 12.2, 1000);
+        verify(modelFactory, times(1)).createOffer("Alex", 0f, 3333);
+        verify(modelFactory, times(1)).createOffer("John", 11.22, 0);
+        verify(modelFactory, times(1)).createOffer("James", 12.2, 10000);
     }
 
     @Test
-    public void testUploadStream_shouldReturnOneLender_whenModelFactoryCreateIt() throws Exception {
+    public void testUploadStream_shouldReturnOneOffer_whenModelFactoryCreateIt() throws Exception {
         String[] row1 = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         String[] row2 = {"Bob", "12.2", "1000"};
 
-        Lender oneLender = TestUtils.mockEmptyLender();
+        Offer oneOffer = TestUtils.mockEmptyOffer();
         CsvClient client = new CsvClientStub(new String[][]{row1, row2});
         when(csvClientFactory.create(reader)).thenReturn(client);
-        when(modelFactory.createLender("Bob", 12.2, 1000)).thenReturn(oneLender);
+        when(modelFactory.createOffer("Bob", 12.2, 1000)).thenReturn(oneOffer);
 
-        List<Lender> lenderList = streamProcessor.uploadStreamData(reader);
+        List<Offer> offerList = streamProcessor.uploadOffers(reader);
 
-        assertTrue(lenderList.size() == 1);
-        assertSame(oneLender, lenderList.get(0));
+        assertTrue(offerList.size() == 1);
+        assertSame(oneOffer, offerList.get(0));
     }
 
     @Test
-    public void testUploadStreamData_shouldReturnEmptyLenders_whenNoLendersInStream() throws Exception {
+    public void testUploadStreamData_shouldReturnEmptyOffers_whenNoOffersInStream() throws Exception {
 
         String[] firstRow = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         CsvClient client = new CsvClientStub(new String[][]{firstRow});
         when(csvClientFactory.create(reader)).thenReturn(client);
 
-        streamProcessor.uploadStreamData(reader);
+        streamProcessor.uploadOffers(reader);
 
         verify(csvClientFactory, times(1)).create(reader);
-        verify(modelFactory, never()).createLender(anyString(), anyDouble(), anyDouble());
+        verify(modelFactory, never()).createOffer(anyString(), anyDouble(), anyDouble());
     }
 
     @Test
@@ -166,39 +166,39 @@ public class CSVModelDataStreamProcessorTest {
     }
 
     @Test
-    public void testUploadStreamData_shouldThrowUserException_whenTwoLenderValuesInStream() throws Exception {
+    public void testUploadStreamData_shouldThrowUserException_whenTwoOfferValuesInStream() throws Exception {
 
         String[] firstRow = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         String[] secondRow = {"Bob", "12.2"};
 
-        testIncorrectFileDataException(formatOneArr(FILE_INCORRECT_LENDER_VALUES_COUNT_EM, secondRow), new String[][]{firstRow, secondRow});
+        testIncorrectFileDataException(formatOneArr(FILE_INCORRECT_OFFER_VALUES_COUNT_EM, secondRow), new String[][]{firstRow, secondRow});
     }
 
     @Test
-    public void testUploadStreamData_shouldThrowUserException_whenFourLenderValuesInStream() throws Exception {
+    public void testUploadStreamData_shouldThrowUserException_whenFourOfferValuesInStream() throws Exception {
 
         String[] firstRow = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         String[] secondRow = {"Bob", "12.2", "11000", "111"};
 
-        testIncorrectFileDataException(formatOneArr(FILE_INCORRECT_LENDER_VALUES_COUNT_EM, secondRow), new String[][]{firstRow, secondRow});
+        testIncorrectFileDataException(formatOneArr(FILE_INCORRECT_OFFER_VALUES_COUNT_EM, secondRow), new String[][]{firstRow, secondRow});
     }
 
     @Test
-    public void testUploadStreamData_shouldThrowUserException_whenTwoLenderValuesWithEmpty() throws Exception {
+    public void testUploadStreamData_shouldThrowUserException_whenTwoOfferValuesWithEmpty() throws Exception {
 
         String[] firstRow = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         String[] secondRow = {"Bob", "12.2", ""};
 
-        testIncorrectFileDataException(formatOneArr(FILE_INCORRECT_LENDER_VALUES_EM, secondRow), new String[][]{firstRow, secondRow});
+        testIncorrectFileDataException(formatOneArr(FILE_INCORRECT_OFFER_VALUES_EM, secondRow), new String[][]{firstRow, secondRow});
     }
 
     @Test
-    public void testUploadStreamData_shouldThrowUserException_whenTwoLenderValuesWithNull() throws Exception {
+    public void testUploadStreamData_shouldThrowUserException_whenTwoOfferValuesWithNull() throws Exception {
 
         String[] firstRow = {FILE_LENDER_HEADER_NAME, FILE_RATE_HEADER_NAME, FILE_AVAILABLE_HEADER_NAME};
         String[] secondRow = {"Bob", "12.2", null};
 
-        testIncorrectFileDataException(formatOneArr(FILE_INCORRECT_LENDER_VALUES_EM, secondRow), new String[][]{firstRow, secondRow});
+        testIncorrectFileDataException(formatOneArr(FILE_INCORRECT_OFFER_VALUES_EM, secondRow), new String[][]{firstRow, secondRow});
     }
 
     @Test
@@ -268,7 +268,7 @@ public class CSVModelDataStreamProcessorTest {
         CsvClient client = new CsvClientStub(data);
         when(csvClientFactory.create(reader)).thenReturn(client);
 
-        streamProcessor.uploadStreamData(reader);
+        streamProcessor.uploadOffers(reader);
     }
 
     private void expectUserExceptionWithMessage(String message) {

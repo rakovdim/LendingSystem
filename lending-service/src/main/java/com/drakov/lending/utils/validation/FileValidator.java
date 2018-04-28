@@ -24,18 +24,18 @@ public class FileValidator {
             throw new UserException(FILE_INCORRECT_HEADER_NAME_EM, Arrays.toString(headerColumns));
     }
 
-    public static void validateValues(String[] lenderRow) throws UserException {
+    public static void validateValues(String[] offerRow) throws UserException {
 
-        validateRowNotEmpty(lenderRow);
+        validateRowNotEmpty(offerRow);
 
-        if (lenderRow.length != 3)
-            throw new UserException(FILE_INCORRECT_LENDER_VALUES_COUNT_EM, Arrays.toString(lenderRow));
+        if (offerRow.length != 3)
+            throw new UserException(FILE_INCORRECT_OFFER_VALUES_COUNT_EM, Arrays.toString(offerRow));
 
-        if (StringUtils.isEmpty(lenderRow[0]) || StringUtils.isEmpty(lenderRow[1]) || StringUtils.isEmpty(lenderRow[2]))
-            throw new UserException(FILE_INCORRECT_LENDER_VALUES_EM, Arrays.toString(lenderRow));
+        if (StringUtils.isEmpty(offerRow[0]) || StringUtils.isEmpty(offerRow[1]) || StringUtils.isEmpty(offerRow[2]))
+            throw new UserException(FILE_INCORRECT_OFFER_VALUES_EM, Arrays.toString(offerRow));
 
-        validateRate(lenderRow);
-        validateAvailable(lenderRow);
+        validateRate(offerRow);
+        validateAvailable(offerRow);
     }
 
     private static void validateRowNotEmpty(String[] row) throws UserException {

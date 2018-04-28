@@ -1,15 +1,15 @@
 package com.drakov.lending.model;
 
-public class Lender {
+public class Offer {
 
     private final Long id;
-    private String name;
+    private String lender;
     private double rate;
     private double available;
 
-    Lender(Long id, String name, double rate, double available) {
+    Offer(Long id, String lender, double rate, double available) {
         this.id = id;
-        this.name = name;
+        this.lender = lender;
         this.rate = rate;
         this.available = available;
     }
@@ -18,12 +18,12 @@ public class Lender {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getLender() {
+        return lender;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLender(String lender) {
+        this.lender = lender;
     }
 
     public double getRate() {
@@ -47,9 +47,9 @@ public class Lender {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Lender lender = (Lender) o;
+        Offer offer = (Offer) o;
 
-        return id.equals(lender.id);
+        return id.equals(offer.id);
 
     }
 
@@ -60,9 +60,9 @@ public class Lender {
 
     @Override
     public String toString() {
-        return "Lender{" +
+        return "Offer{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", lender='" + lender + '\'' +
                 ", rate=" + rate +
                 ", available=" + available +
                 '}';

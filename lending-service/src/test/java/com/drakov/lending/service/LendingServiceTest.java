@@ -1,9 +1,9 @@
 package com.drakov.lending.service;
 
 import com.drakov.lending.exceptions.UserException;
-import com.drakov.lending.model.Lender;
-import com.drakov.lending.repository.LenderRepository;
-import com.drakov.lending.service.finder.LenderFinder;
+import com.drakov.lending.model.Offer;
+import com.drakov.lending.repository.OfferRepository;
+import com.drakov.lending.service.finder.BestOffersFinder;
 import com.drakov.lending.service.repayment.BorrowerLoanProcessor;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.drakov.lending.constants.LendingConstants.ARGS_LOAN_AMOUNT_NOT_POSITIVE_EM;
-import static com.drakov.lending.constants.LendingConstants.NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM;
+import static com.drakov.lending.constants.LendingConstants.NO_OFFER_WAS_FOUND_EM;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -26,9 +26,9 @@ public class LendingServiceTest {
     private LendingService lendingService;
 
     @Mock
-    private LenderRepository lenderRepository;
+    private OfferRepository offerRepository;
     @Mock
-    private LenderFinder lenderFinder;
+    private BestOffersFinder bestOffersFinder;
     @Mock
     private BorrowerLoanProcessor borrowerLoanProcessor;
 
@@ -37,46 +37,46 @@ public class LendingServiceTest {
 
     @Before
     public void setUp() {
-        this.lendingService = new LendingService(lenderRepository, lenderFinder, borrowerLoanProcessor);
+        this.lendingService = new LendingService(offerRepository, bestOffersFinder, borrowerLoanProcessor);
     }
 
     @Test
     public void testCalculateLoan_shouldCallRequiredServices_ifAllParametersValid() throws UserException {
 
         Double loanAmount = 10d;
-        Lender lender = mock(Lender.class);
-        List<Lender> lenders = Collections.singletonList(lender);
+        Offer offer = mock(Offer.class);
+        List<Offer> offers = Collections.singletonList(offer);
 
-        when(lenderRepository.findAll()).thenReturn(lenders);
-        when(lenderFinder.findAppropriateLender(lenders, loanAmount)).thenReturn(lender);
+        when(offerRepository.findAll()).thenReturn(offers);
+        when(bestOffersFinder.findOffer(offers, loanAmount)).thenReturn(offer);
 
         lendingService.calculateLoan(loanAmount);
 
-        verify(lenderRepository, times(1)).findAll();
-        verify(lenderFinder, times(1)).findAppropriateLender(lenders, loanAmount);
-        verify(borrowerLoanProcessor, times(1)).calculateQuote(lender, loanAmount);
+        verify(offerRepository, times(1)).findAll();
+        verify(bestOffersFinder, times(1)).findOffer(offers, loanAmount);
+        verify(borrowerLoanProcessor, times(1)).calculateQuote(offer, loanAmount);
     }
 
     @Test
-    public void testCalculateLoan_shouldThrowException_ifNoLenderInRepoExist() throws UserException {
+    public void testCalculateLoan_shouldThrowException_ifNoOfferInRepoExist() throws UserException {
         thrown.expect(UserException.class);
-        thrown.expectMessage(NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM);
+        thrown.expectMessage(NO_OFFER_WAS_FOUND_EM);
 
         Double loanAmount = 10d;
-        when(lenderRepository.findAll()).thenReturn(Collections.emptyList());
-        when(lenderFinder.findAppropriateLender(anyList(), anyDouble())).thenReturn(mock(Lender.class));
+        when(offerRepository.findAll()).thenReturn(Collections.emptyList());
+        when(bestOffersFinder.findOffer(anyList(), anyDouble())).thenReturn(mock(Offer.class));
 
         lendingService.calculateLoan(loanAmount);
     }
 
     @Test
-    public void testCalculateLoan_shouldThrowException_ifNoAppropriateLenderFoundByFinder() throws UserException {
+    public void testCalculateLoan_shouldThrowException_ifNoBestOfferFoundByFinder() throws UserException {
 
-        expectUserException(NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM);
+        expectUserException(NO_OFFER_WAS_FOUND_EM);
 
         Double loanAmount = 10d;
-        when(lenderRepository.findAll()).thenReturn(Collections.singletonList(mock(Lender.class)));
-        when(lenderFinder.findAppropriateLender(anyList(), anyDouble())).thenReturn(null);
+        when(offerRepository.findAll()).thenReturn(Collections.singletonList(mock(Offer.class)));
+        when(bestOffersFinder.findOffer(anyList(), anyDouble())).thenReturn(null);
 
         lendingService.calculateLoan(loanAmount);
     }

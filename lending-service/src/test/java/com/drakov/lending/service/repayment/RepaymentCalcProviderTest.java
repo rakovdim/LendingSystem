@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.drakov.lending.TestUtils.mockLenderRate;
+import static com.drakov.lending.TestUtils.mockOfferRate;
 import static org.junit.Assert.assertSame;
 
 /**
@@ -31,7 +31,7 @@ public class RepaymentCalcProviderTest {
     @Test
     public void testGet_shouldReturnZeroCalc_ifRateIs0() {
 
-        RepaymentCalculator calculator = repaymentCalcProvider.get(mockLenderRate(0));
+        RepaymentCalculator calculator = repaymentCalcProvider.get(mockOfferRate(0));
 
         assertSame("Not Zero Calc was returned", zeroRateCalculator, calculator);
     }
@@ -39,7 +39,7 @@ public class RepaymentCalcProviderTest {
     @Test
     public void testGet_shouldReturnZeroCalc_ifRateIs10Percents() {
 
-        RepaymentCalculator calculator = repaymentCalcProvider.get(mockLenderRate(0.1f));
+        RepaymentCalculator calculator = repaymentCalcProvider.get(mockOfferRate(0.1f));
 
         assertSame("Not Interest Based Calc was returned", interestBasedCalculator, calculator);
     }
