@@ -3,7 +3,6 @@ package com.drakov.lending.constants;
 public interface LendingConstants {
 
     String NO_LENDER_WAS_FOUND_DURING_LOAN_CALC_EM = "No lender was found. Perhaps there is no lender with requested budget";
-    String USER_EXCEPTION_OCCURRED_ERROR_MESSAGE = "User exception occurred";
     String INTERNAL_EXCEPTION_OCCURRED_EM = "Internal error occurred. Please contact system administrator";
 
     //Args validation error messages

@@ -1,4 +1,4 @@
-package com.drakov.lending.controller.console.format;
+package com.drakov.lending.view.format;
 
 import com.drakov.lending.config.FormatProperties;
 import com.drakov.lending.dto.LendingResponse;

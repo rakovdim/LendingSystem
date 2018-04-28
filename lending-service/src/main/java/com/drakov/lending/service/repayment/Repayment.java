@@ -19,4 +19,12 @@ public class Repayment {
     public double getTotal() {
         return total;
     }
+
+    @Override
+    public String toString() {
+        return "Repayment{" +
+                "monthly=" + monthly +
+                ", total=" + total +
+                '}';
+    }
 }

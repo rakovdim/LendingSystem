@@ -7,7 +7,7 @@ import static com.drakov.lending.constants.LendingConstants.*;
 
 public class ArgsValidator {
 
-    public static void validateInputArgs(LoanProperties props, String... args) throws UserException {
+    public static void validateFileAndAmountArgs(LoanProperties props, String... args) throws UserException {
 
         validateArgsCount(args);
 

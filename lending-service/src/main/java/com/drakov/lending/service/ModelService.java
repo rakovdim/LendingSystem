@@ -10,9 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
+import static com.drakov.lending.constants.LendingConstants.FILE_NOT_FOUND_EM;
 import static com.drakov.lending.constants.LendingConstants.NO_LENDERS_FOUND_DURING_STREAM_PROCESSING_EM;
 
 /**
@@ -32,6 +36,25 @@ public class ModelService {
         this.lenderRepository = repository;
     }
 
+    public void uploadModelDataFile(String fileName) throws UserException {
+        FileReader reader = null;
+        try {
+            reader = new FileReader(fileName);
+
+            uploadModelDataStream(reader);
+
+        } catch (FileNotFoundException e) {
+            throw new UserException(FILE_NOT_FOUND_EM, e);
+        } finally {
+            if (reader != null)
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    log.error("Failed to close file reader stream");
+                }
+        }
+    }
+
     public void uploadModelDataStream(Reader reader) throws UserException {
 
         log.debug("Processing model data stream starts");
@@ -45,4 +68,6 @@ public class ModelService {
 
         log.debug("Processing model data stream ends");
     }
+
+
 }

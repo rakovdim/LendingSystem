@@ -9,6 +9,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class InterestBasedCalculator extends BaseRepaymentCalculator {
+
+    @Override
+    protected boolean isRequestValid(RepaymentCalcRequest request) {
+        return super.isRequestValid(request) && request.getRate() > 0;
+    }
+
     @Override
     protected Repayment performCalculation(RepaymentCalcRequest request) {
 
@@ -17,10 +23,6 @@ public class InterestBasedCalculator extends BaseRepaymentCalculator {
         return new Repayment(monthlyRepayment, monthlyRepayment * request.getTermInMonths());
     }
 
-    @Override
-    protected boolean isRequestValid(RepaymentCalcRequest request) {
-        return super.isRequestValid(request) && request.getRate() > 0;
-    }
 
     private double calcMonthlyRepayment(double loanAmount, double rate, int termInMonths) {
         double monthlyRate = rate / 12.0;
