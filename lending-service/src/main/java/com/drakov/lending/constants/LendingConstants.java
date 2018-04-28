@@ -14,7 +14,7 @@ public interface LendingConstants {
 
     //File processing error messages
     String FILE_BASE_PROCESSING_EM = "Error during processing csv file: ";
-    String FILE_NOT_FOUND_EM = FILE_BASE_PROCESSING_EM + "csv file not found";
+    String FILE_NOT_FOUND_EM = FILE_BASE_PROCESSING_EM + "csv file not found. Please put it in LendingSystem directory or specify absolute path";
 
     String FILE_INCORRECT_HEADERS_COUNT_EM = FILE_BASE_PROCESSING_EM + "incorrect header columns count. There should be three: Lender, Rate and Available (commas forbidden)";
     String FILE_INCORRECT_HEADER_NAME_EM = FILE_BASE_PROCESSING_EM + "incorrect header name. Next strictly ordered headers are expected: Lender,Rate,Available";

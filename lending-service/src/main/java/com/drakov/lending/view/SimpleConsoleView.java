@@ -38,10 +38,13 @@ public class SimpleConsoleView implements CommandLineRunner {
         switch (responseEntity.getStatus()) {
             case OK:
                 System.out.println(responseFormatter.format(responseEntity.getEntity()));
+                break;
             case INTERNAL_ERROR:
                 System.out.println(LendingConstants.INTERNAL_EXCEPTION_OCCURRED_EM);
+                break;
             case USER_EXCEPTION:
                 System.out.println(responseEntity.getException().getMessage());
+                break;
             default:
                 throw new InternalProcessingException("Unknown response status. Response Entity: " + responseEntity);
         }

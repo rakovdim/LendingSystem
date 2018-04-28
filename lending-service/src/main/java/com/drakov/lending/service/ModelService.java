@@ -37,6 +37,8 @@ public class ModelService {
     }
 
     public void uploadModelDataFile(String fileName) throws UserException {
+        log.debug("Loading file with market values: {0}", fileName);
+
         FileReader reader = null;
         try {
             reader = new FileReader(fileName);
@@ -44,6 +46,8 @@ public class ModelService {
             uploadModelDataStream(reader);
 
         } catch (FileNotFoundException e) {
+            log.error("File was not wound: " + fileName);
+
             throw new UserException(FILE_NOT_FOUND_EM, e);
         } finally {
             if (reader != null)

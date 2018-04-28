@@ -7,6 +7,8 @@ import com.drakov.lending.exceptions.UserException;
 import com.drakov.lending.model.Lender;
 import com.drakov.lending.model.ModelFactory;
 import com.drakov.lending.utils.validation.FileValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,8 @@ import java.util.List;
 
 @Component
 public class CSVModelDataStreamProcessor implements ModelDataStreamProcessor {
+
+    private static final Logger log = LoggerFactory.getLogger(CSVModelDataStreamProcessor.class);
 
     private ModelFactory modelFactory;
     private CsvClientFactory csvClientFactory;
@@ -45,6 +49,8 @@ public class CSVModelDataStreamProcessor implements ModelDataStreamProcessor {
 
         FileValidator.validateHeaders(headers);
 
+        log.trace("Header is read and validated. Starting reading values");
+
         List<Lender> lenders = new ArrayList<>();
 
         String[] lenderRow;
@@ -53,6 +59,8 @@ public class CSVModelDataStreamProcessor implements ModelDataStreamProcessor {
             FileValidator.validateValues(lenderRow);
 
             Lender lender = createLender(lenderRow[0], lenderRow[1], lenderRow[2]);
+
+            log.trace("Values is validated and Lender is created: {0}", lender);
 
             lenders.add(lender);
         }

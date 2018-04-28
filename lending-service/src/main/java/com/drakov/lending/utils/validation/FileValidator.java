@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import static com.drakov.lending.constants.LendingConstants.*;
 
+//todo logs
 public class FileValidator {
 
     public static void validateHeaders(String[] headerColumns) throws UserException {
