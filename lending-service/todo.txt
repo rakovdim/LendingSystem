@@ -1,0 +1,8 @@
+[done] 1) add logs
+2) add java docs
+[done] 3) round nor format
+[done] 4) Check constants
+[done] 5) Exception Handling
+[done] 6) Infinity rate and available
+[done] 7) Integration tests
+8) Aspects
